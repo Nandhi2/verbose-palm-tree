@@ -1,0 +1,265 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Bank Application Sign Up</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background-image: url("background.png"); /* Replace with your image URL */
+      background-size: cover;
+      background-position: center;
+      margin: 0;
+      padding: 0;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+    }
+
+    .container, .signup-container {
+      display: none;
+      justify-content: center;
+      align-items: center;
+      width: 100%;
+      height: 100%;
+    }
+
+    .show {
+      display: flex;
+    }
+
+    .popup {
+      width: 100%;
+      height: 100%;
+      background-image: url("bank1.png"); /* Replace with your image URL */
+      background-size: cover;
+      background-position: center;
+    }
+
+    .signup-box {
+      background-color: rgba(255, 255, 255, 0.9); /* Slightly transparent white background */
+      padding: 30px;
+      border-radius: 10px;
+      box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+      max-width: 400px;
+      width: 100%;
+      animation: fadeIn 1s;
+    }
+
+    @keyframes fadeIn {
+      from {
+        opacity: 0;
+      }
+      to {
+        opacity: 1;
+      }
+    }
+
+    .form-group {
+      margin-bottom: 20px;
+    }
+
+    label {
+      display: block;
+      margin-bottom: 5px;
+    }
+
+    .form-control {
+      width: 100%;
+      padding: 10px;
+      font-size: 1em;
+      border: 1px solid #ccc;
+      border-radius: 5px;
+    }
+
+    .error-message {
+      color: red;
+      font-size: 0.875em;
+      margin-top: 5px;
+    }
+
+    .submit-button {
+      width: 100%;
+      background-color: #4c93af;
+      border: none;
+      padding: 10px;
+      color: white;
+      font-size: 1em;
+      border-radius: 5px;
+      cursor: pointer;
+    }
+
+    .submit-button:hover {
+      background-color: #357a9b;
+    }
+
+    .login-link {
+      margin-top: 20px;
+      text-align: center;
+    }
+
+    .login-link a {
+      color: #4c93af;
+      text-decoration: none;
+    }
+
+    .login-link a:hover {
+      text-decoration: underline;
+    }
+  </style>
+</head>
+<body>
+  <div class="container show" id="popup-container">
+    <div class="popup"></div>
+  </div>
+  <div class="signup-container" id="signup-container">
+    <div class="signup-box">
+      <h2>Sign Up</h2>
+      <form id="signup-form" novalidate>
+        <div class="form-group">
+          <label for="name">Name</label>
+          <input type="text" id="name" class="form-control" required pattern="[A-Za-z]+" title="Name should only contain letters">
+          <div id="error-name" class="error-message"></div>
+        </div>
+        <div class="form-group">
+          <label for="branch">Branch Name</label>
+          <input type="text" id="branch" class="form-control" required pattern="[A-Za-z]+" title="Branch name should only contain letters">
+          <div id="error-branch" class="error-message"></div>
+        </div>
+        <div class="form-group">
+          <label for="accountNumber">Account Number</label>
+          <input type="text" id="accountNumber" class="form-control" required pattern="\d{16}" title="Account number should contain exactly 16 digits">
+          <div id="error-accountNumber" class="error-message"></div>
+        </div>
+        <div class="form-group">
+          <label for="mobileNumber">Mobile Number</label>
+          <input type="text" id="mobileNumber" class="form-control" required pattern="\d{10}" title="Mobile number should contain exactly 10 digits">
+          <div id="error-mobileNumber" class="error-message"></div>
+        </div>
+        <div class="form-group">
+          <label for="pin">PIN</label>
+          <input type="password" id="pin" class="form-control" required pattern="\d{5}" title="PIN should contain exactly 5 digits">
+          <div id="error-pin" class="error-message"></div>
+        </div>
+        <div class="form-group">
+          <label for="reEnterPin">Re-enter PIN</label>
+          <input type="password" id="reEnterPin" class="form-control" required pattern="\d{5}" title="PINs do not match">
+          <div id="error-reEnterPin" class="error-message"></div>
+        </div>
+        <button type="submit" class="submit-button" onclick =window.location.href="Login.html">Sign Up</button>
+      </form>
+      <div class="login-link">
+        <p>Already have an account? <a href="Login.html">Login here</a></p>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    document.addEventListener('DOMContentLoaded', function() {
+      // Show the popup for 5 seconds
+      setTimeout(function() {
+        document.getElementById('popup-container').classList.remove('show');
+        document.getElementById('signup-container').classList.add('show');
+      }, 5000);
+
+      const form = document.getElementById('signup-form');
+
+      form.addEventListener('input', (event) => {
+        const field = event.target;
+        const errorElement = document.getElementById(`error-${field.id}`);
+
+        if (field.validity.valid) {
+          errorElement.innerText = '';
+        } else {
+          errorElement.innerText = field.title;
+        }
+      });
+
+      form.addEventListener('submit', async function(event) {
+        event.preventDefault();
+
+        const formData = {
+          name: document.getElementById('name').value.trim(),
+          branch: document.getElementById('branch').value.trim(),
+          accountNumber: document.getElementById('accountNumber').value.trim(),
+          mobileNumber: document.getElementById('mobileNumber').value.trim(),
+          pin: document.getElementById('pin').value.trim(),
+        };
+
+        const errors = {};
+
+        if (!/^[A-Za-z]+$/.test(formData.name)) {
+          errors.name = 'Name should only contain letters';
+        }
+
+        if (!/^[A-Za-z]+$/.test(formData.branch)) {
+          errors.branch = 'Branch name should only contain letters';
+        }
+
+        if (!/^\d{16}$/.test(formData.accountNumber)) {
+          errors.accountNumber = 'Account number should contain exactly 16 digits';
+        }
+
+        if (!/^\d{10}$/.test(formData.mobileNumber)) {
+          errors.mobileNumber = 'Mobile number should contain exactly 10 digits';
+        }
+
+        if (!/^\d{5}$/.test(formData.pin)) {
+          errors.pin = 'PIN should contain exactly 5 digits';
+        }
+
+        if (formData.pin !== document.getElementById('reEnterPin').value.trim()) {
+          errors.reEnterPin = 'PINs do not match';
+        }
+
+        displayErrors(errors);
+
+        if (Object.keys(errors).length === 0) {
+          try {
+            const response = await fetch('/signup', {
+              method: 'POST',
+              headers: {
+                'Content-Type': 'application/json'
+              },
+              body: JSON.stringify(formData)
+            });
+
+            const result = await response.json();
+            if (response.ok) {
+              alert(result.message);
+              // Redirect or clear the form if needed
+            } else {
+              alert('Failed to sign up: ' + result.message);
+            }
+          } catch (error) {
+            console.error('Error:', error);
+            alert('An error occurred while signing up.');
+          }
+        }
+      });
+
+      function displayErrors(errors) {
+        const errorFields = Object.keys(errors);
+        errorFields.forEach(field => {
+          const errorElement = document.getElementById(`error-${field}`);
+          if (errorElement) {
+            errorElement.innerText = errors[field];
+          }
+        });
+
+        const fields = ['name', 'branch', 'accountNumber', 'mobileNumber', 'pin', 'reEnterPin'];
+        fields.forEach(field => {
+          if (!errors[field]) {
+            const errorElement = document.getElementById(`error-${field}`);
+            if (errorElement) {
+              errorElement.innerText = '';
+            }
+          }
+        });
+      }
+    });
+  </script>
+</body>
+</html>

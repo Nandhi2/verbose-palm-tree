@@ -1,0 +1,143 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Bank Application - Balance</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background-image: url("background.png"); /* Replace with your image URL */
+      background-size: cover;
+      background-position: center;
+      margin: 0;
+      padding: 0;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+    }
+
+    .balance-box {
+      background-color: rgba(255, 255, 255, 0.9); /* Slightly transparent white background */
+      padding: 50px; /* Increased padding for larger box */
+      border-radius: 10px;
+      box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+      max-width: 500px; /* Increased max-width for wider box */
+      width: 100%;
+      text-align: center;
+    }
+
+    .balance {
+      font-size: 1.5em;
+      margin-top: 20px;
+    }
+
+    .pin-input {
+      width: 100%;
+      padding: 10px;
+      font-size: 1em;
+      border: 1px solid #ccc;
+      border-radius: 5px;
+      margin-bottom: 10px;
+      inputmode: numeric; /* For mobile numeric keypad */
+    }
+
+    .submit-button {
+      background-color: #4c93af;
+      border: none;
+      padding: 10px;
+      margin-top: 20px;
+      color: white;
+      font-size: 1em;
+      border-radius: 5px;
+      cursor: pointer;
+    }
+
+    .submit-button:hover {
+      background-color: #357a9b;
+    }
+  </style>
+</head>
+<body>
+  <div class="balance-box">
+    <h2>Available Balance</h2>
+    <form id="pin-form">
+      <input type="password" id="pin" class="pin-input" placeholder="Enter PIN" required pattern="\d{5}" title="PIN should contain exactly 5 digits">
+      <button type="button" id="submit-pin" class="submit-button">View Balance</button>
+    </form>
+    <div id="balance" class="balance">
+      <!-- Balance will be displayed here -->
+    </div>
+    <button type="button" id="refresh-button" class="submit-button" style="display: none;">Refresh Balance</button>
+  </div>
+
+  <script>
+    const pinInput = document.getElementById('pin');
+    const submitPinBtn = document.getElementById('submit-pin');
+    const refreshBtn = document.getElementById('refresh-button');
+    const balanceElement = document.getElementById('balance');
+
+    submitPinBtn.addEventListener('click', async () => {
+      if (pinInput.checkValidity()) {
+        const formData = {
+          pin: pinInput.value.trim()
+        };
+
+        try {
+          const response = await fetch('http://localhost:3000/api/verify-pin', {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(formData)
+          });
+
+          if (!response.ok) {
+            throw new Error('Invalid PIN');
+          }
+
+          const data = await response.json();
+          displayBalance(data.balance);
+        } catch (error) {
+          console.error('Error verifying PIN:', error.message);
+          balanceElement.innerText = 'Invalid PIN or error occurred';
+        }
+      } else {
+        balanceElement.innerText = 'Please enter a valid PIN';
+      }
+    });
+
+    function displayBalance(balance) {
+      balanceElement.innerText = `Available Balance: $${balance}`;
+      refreshBtn.style.display = 'block'; // Display refresh button after showing balance
+    }
+
+    refreshBtn.addEventListener('click', async () => {
+      const formData = {
+        pin: pinInput.value.trim()
+      };
+
+      try {
+        const response = await fetch('http://localhost:3000/api/balance', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json'
+          },
+          body: JSON.stringify(formData)
+        });
+
+        if (!response.ok) {
+          throw new Error('Failed to fetch balance');
+        }
+
+        const data = await response.json();
+        displayBalance(data.balance);
+      } catch (error) {
+        console.error('Error refreshing balance:', error.message);
+        balanceElement.innerText = 'Failed to refresh balance';
+      }
+    });
+  </script>
+</body>
+</html>

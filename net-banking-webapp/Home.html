@@ -1,0 +1,156 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Dashboard</title>
+  <style>
+    body, html {
+      margin: 0;
+      padding: 0;
+      font-family: Arial, sans-serif;
+      background-image: url('background.png'); /* Add path to background image */
+      background-size: cover;
+      background-position: center;
+      height: 100%;
+    }
+
+    .top-border {
+      height: 100px; /* Adjust height of the top border as needed */
+      background-color: lightblue;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 0 20px;
+      box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      z-index: 1000;
+    }
+
+    .top-border h1 {
+      margin: 0;
+      font-size: 24px;
+    }
+
+    .top-border .user-info {
+      display: flex;
+      align-items: center;
+    }
+
+    .top-border .user-info img {
+      height: 60px;
+      margin-right: 20px;
+      margin-left: 20px; /* Adjust margin to move the logos towards the left */
+    }
+
+    .top-border .user-name {
+      font-size: 18px;
+      font-weight: bold;
+      margin-right: 10px;
+    }
+
+    .top-border .logout {
+      cursor: pointer;
+      margin-left: 10px; /* Adjust margin to move the logout logo towards the left */
+    }
+
+    .container {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      background-color: rgba(255, 255, 255, 0.9);
+      padding: 20px;
+      text-align: center;
+      border-radius: 8px;
+      box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+      width: 90%; /* Increased width for mobile view */
+      max-width: 400px; /* Set maximum width for larger screens */
+    }
+
+    .button {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background-color: #4c93af;
+      color: black;
+      padding: 15px;
+      margin: 15px auto;
+      border: none;
+      border-radius: 4px;
+      cursor: pointer;
+      font-size: 18px;
+      width: 90%; /* Adjust width of buttons as needed */
+      max-width: 350px; /* Set maximum width of buttons for responsiveness */
+    }
+
+    .button img {
+      height: 40px; /* Increased logo size for mobile view */
+      margin-right: 10px;
+    }
+
+    .button:hover {
+      background-color: #5BBBBE;
+    }
+
+    @media (min-width: 768px) {
+      .container {
+        width: 60%;
+      }
+      .button {
+        width: 80%;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="top-border">
+    <h1>Home</h1>
+    <div class="user-info" id="user-info">
+      <img src="user.png" alt="User Logo"> <!-- Add path to user logo -->
+      <span class="user-name" id="user-name"></span> <!-- Replace with actual user name -->
+      <div class="logout" onclick="handleLogout()">
+        <img src="logoout.jpg" alt="Logout Logo"> <!-- Add path to logout logo -->
+      </div>
+    </div>
+  </div>
+  <div class="container">
+    <button class="button" onclick="window.location.href='viewtransfer.html';">
+      <img src="transpict.jpg" alt="Transaction Logo"> <!-- Add path to transaction logo -->
+      View Transaction
+    </button>
+    <button class="button" onclick="window.location.href = 'moneytransfer.html';">
+      <img src="monney.png" alt="Transfer Logo"> <!-- Add path to transfer logo -->
+      Money Transfer
+    </button>
+    <button class="button" onclick="window.location.href='checkbalance.html';">
+      <img src="pict.jpg" alt="Balance Logo"> <!-- Add path to balance logo -->
+      Check Balance
+    </button>
+  </div>
+  <script>
+    // Function to get user name from localStorage and update UI
+    function updateUserInfo() {
+      const userInfoElement = document.getElementById('user-info');
+      const userNameElement = document.getElementById('user-name');
+      const userName = localStorage.getItem('username'); // Retrieve username from localStorage
+      if (userName) {
+        userNameElement.textContent = userName;
+      }
+    }
+
+    function handleLogout() {
+      // Clear localStorage data
+      localStorage.removeItem('username');
+      // Redirect to login page
+      window.location.href = 'login.html';
+    }
+
+    // Call updateUserInfo function on page load
+    updateUserInfo();
+  </script>
+</body>
+</html>
